@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local-only workspace files (never commit secrets)
+.env
+.env.*
+!.env.example
+auth-profiles.json
+auth-state.json
+models.json.local
+
+# Backups
+*.bak
+*.orig
+
+# OS / misc
+Thumbs.db

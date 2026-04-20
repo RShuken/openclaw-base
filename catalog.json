@@ -1,0 +1,1200 @@
+{
+  "version": "2.0.0",
+  "format": "intent-based-v2",
+  "products": {
+    "openclaw": {
+      "description": "Personal AI agent system",
+      "skills": {
+        "install": {
+          "file": "openclaw/install.md",
+          "description": "Install OpenClaw agent with permanent enrollment",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [],
+          "provides": [
+            "openclaw_installed",
+            "device_enrolled"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 5,
+          "group": "install"
+        },
+        "identity": {
+          "file": "deploy-identity.md",
+          "description": "Agent identity (name, emoji) and soul (personality, humor, tone)",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "agent_identity"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Agent name",
+            "Emoji/mascot",
+            "Creature/spirit metaphor",
+            "Personality tone preferences",
+            "Humor style preferences"
+          ],
+          "estimatedMinutes": 10,
+          "group": "foundation"
+        },
+        "messaging": {
+          "file": "deploy-messaging-setup.md",
+          "description": "Telegram topics, Slack mention-only mode, communication rules",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/identity"
+          ],
+          "provides": [
+            "messaging_configured",
+            "telegram_topics"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Telegram bot token",
+            "Telegram group ID",
+            "Deployment plan (which systems to install)",
+            "Topic mapping decisions (create/map existing/skip per topic)",
+            "Slack workspace (optional)",
+            "Communication rule overrides (optional)"
+          ],
+          "estimatedMinutes": 15,
+          "group": "foundation"
+        },
+        "prompt-guide": {
+          "file": "deploy-prompt-guide.md",
+          "description": "Claude Opus 4.6 prompting best practices",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "prompt_guide"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Primary AI model (defaults to Claude Opus 4.6)"
+          ],
+          "estimatedMinutes": 5,
+          "group": "foundation"
+        },
+        "security-safety": {
+          "file": "deploy-security-safety.md",
+          "description": "Prompt injection defense, secret redaction, approval gates, security checks",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "security_layer"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Approval gate selection (which of 5 gates to enable)",
+            "Security cron schedule preferences",
+            "Client timezone"
+          ],
+          "estimatedMinutes": 10,
+          "group": "foundation"
+        },
+        "google-workspace": {
+          "file": "deploy-google-workspace.md",
+          "description": "Gmail, Calendar, Drive via gog OAuth CLI",
+          "os": [
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "google_workspace"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Google account email",
+            "OAuth consent (browser authorization)",
+            "Which Google services to enable (Gmail, Calendar, Drive, Docs)",
+            "GCP project OAuth credentials (if default client blocked)"
+          ],
+          "estimatedMinutes": 15,
+          "group": "foundation"
+        },
+        "personal-crm": {
+          "file": "deploy-personal-crm.md",
+          "description": "SQLite CRM with 20 tables, vector search, relationship scoring",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/google-workspace",
+            "openclaw/messaging",
+            "openclaw/security-safety"
+          ],
+          "provides": [
+            "personal_crm"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 15,
+          "group": "core"
+        },
+        "knowledge-base": {
+          "file": "deploy-knowledge-base.md",
+          "description": "RAG system: ingest articles, YouTube, X threads, PDFs via Telegram",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging",
+            "openclaw/security-safety"
+          ],
+          "provides": [
+            "knowledge_base"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "core"
+        },
+        "social-tracking": {
+          "file": "deploy-social-tracking.md",
+          "description": "YouTube, Instagram, X, TikTok daily analytics snapshots",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging",
+            "openclaw/google-workspace"
+          ],
+          "provides": [
+            "social_tracking"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Which platforms to track (YouTube, Instagram, X/Twitter, TikTok)",
+            "Instagram Meta Graph API long-lived token",
+            "X/Twitter OAuth 1.0a keys (4 tokens)",
+            "Social media account URLs/handles"
+          ],
+          "estimatedMinutes": 10,
+          "group": "core"
+        },
+        "advisory-council": {
+          "file": "deploy-advisory-council.md",
+          "description": "8 parallel AI expert personas, nightly ranked recommendations",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging",
+            "openclaw/security-safety"
+          ],
+          "provides": [
+            "advisory_council"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Which expert personas to enable (up to 8)",
+            "AI provider API key (Anthropic preferred)",
+            "Optional: HubSpot token, Beehiiv API key, Asana token"
+          ],
+          "estimatedMinutes": 15,
+          "group": "intelligence"
+        },
+        "security-council": {
+          "file": "deploy-security-council.md",
+          "description": "Nightly 4-perspective codebase security review",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging",
+            "openclaw/security-safety"
+          ],
+          "provides": [
+            "security_council"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "intelligence"
+        },
+        "platform-health": {
+          "file": "deploy-platform-health.md",
+          "description": "Daily 9-area platform health analysis",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging",
+            "openclaw/security-safety"
+          ],
+          "provides": [
+            "platform_health"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "intelligence"
+        },
+        "fathom-pipeline": {
+          "file": "deploy-fathom-pipeline.md",
+          "description": "Meeting transcript processing, CRM matching, action items",
+          "os": [
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/personal-crm",
+            "openclaw/google-workspace",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "fathom_pipeline"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Fathom API key",
+            "Todoist API token"
+          ],
+          "estimatedMinutes": 10,
+          "group": "automation"
+        },
+        "urgent-email": {
+          "file": "deploy-urgent-email.md",
+          "description": "AI email urgency detection with feedback learning",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/personal-crm",
+            "openclaw/google-workspace",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "urgent_email"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "automation"
+        },
+        "daily-briefing": {
+          "file": "deploy-daily-briefing.md",
+          "description": "7am briefing: calendar, CRM context, content performance, action items",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/personal-crm",
+            "openclaw/google-workspace",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "daily_briefing"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "automation"
+        },
+        "video-pipeline": {
+          "file": "deploy-video-pipeline.md",
+          "description": "Slack-triggered video idea research, Asana cards",
+          "os": [
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/knowledge-base",
+            "openclaw/messaging",
+            "openclaw/asana"
+          ],
+          "provides": [
+            "video_pipeline"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Asana project ID for video pipeline",
+            "Slack trigger configuration",
+            "X/Twitter bearer token (for x-research-v2)"
+          ],
+          "estimatedMinutes": 10,
+          "group": "automation"
+        },
+        "db-backups": {
+          "file": "deploy-db-backups.md",
+          "description": "Hourly auto-discover + encrypt + upload SQLite backups to Google Drive",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/google-workspace",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "db_backups"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "operations"
+        },
+        "git-autosync": {
+          "file": "deploy-git-autosync.md",
+          "description": "Hourly git commit + push with conflict detection",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "git_autosync"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Git remote URL",
+            "SSH key or HTTPS token"
+          ],
+          "estimatedMinutes": 10,
+          "group": "operations"
+        },
+        "health-monitoring": {
+          "file": "deploy-health-monitoring.md",
+          "description": "Daily/weekly/monthly health checks (silent = healthy)",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "health_monitoring"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "operations"
+        },
+        "model-tracking": {
+          "file": "deploy-model-tracking.md",
+          "description": "Log every AI API call, generate cost reports",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "model_tracking"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 5,
+          "group": "operations"
+        },
+        "humanizer": {
+          "file": "deploy-humanizer.md",
+          "description": "Strip 24+ AI writing patterns from output text",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "humanizer"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 5,
+          "group": "content"
+        },
+        "image-gen": {
+          "file": "deploy-image-gen.md",
+          "description": "Gemini image generation (text-to-image, editing, up to 4K)",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "image_gen"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Gemini API key"
+          ],
+          "estimatedMinutes": 5,
+          "group": "content"
+        },
+        "video-gen": {
+          "file": "deploy-video-gen.md",
+          "description": "Veo 3 text-to-video and image-to-video generation",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "video_gen"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Gemini API key with Veo 3 access"
+          ],
+          "estimatedMinutes": 5,
+          "group": "content"
+        },
+        "video-analysis": {
+          "file": "deploy-video-analysis.md",
+          "description": "Gemini video analysis (local files, YouTube URLs, uploads)",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "video_analysis"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Gemini API key"
+          ],
+          "estimatedMinutes": 5,
+          "group": "content"
+        },
+        "newsletter-crm": {
+          "file": "deploy-newsletter-crm.md",
+          "description": "Beehiiv subscriber/post analytics + HubSpot sync",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "newsletter_crm"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Beehiiv API key",
+            "Beehiiv publication ID",
+            "HubSpot access token"
+          ],
+          "estimatedMinutes": 10,
+          "group": "integrations"
+        },
+        "asana": {
+          "file": "deploy-asana.md",
+          "description": "Asana project sync, action items briefing",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "asana"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Asana personal access token",
+            "Asana workspace and project IDs"
+          ],
+          "estimatedMinutes": 10,
+          "group": "integrations"
+        },
+        "earnings": {
+          "file": "deploy-earnings.md",
+          "description": "Weekly earnings preview, dynamic cron jobs per company",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "earnings"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Stock ticker watchlist"
+          ],
+          "estimatedMinutes": 10,
+          "group": "integrations"
+        },
+        "food-journal": {
+          "file": "deploy-food-journal.md",
+          "description": "Telegram food/symptom tracking with weekly correlation analysis",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "food_journal"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Meal reminder times",
+            "Tracking needs (allergies, conditions, diet)"
+          ],
+          "estimatedMinutes": 10,
+          "group": "integrations"
+        },
+        "telegram-forum": {
+          "file": "deploy-telegram-forum.md",
+          "description": "Telegram Forum/Topics mode setup, bot permissions, topic threads",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "telegram_forum"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Telegram group",
+            "Bot admin permissions confirmation",
+            "Topic names and colors"
+          ],
+          "estimatedMinutes": 15,
+          "group": "foundation"
+        },
+        "memory": {
+          "file": "deploy-memory.md",
+          "description": "Cross-session persistent memory with vector search",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "persistent_memory"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "core"
+        },
+        "content-pipeline": {
+          "file": "deploy-content-pipeline.md",
+          "description": "Content creation and publishing pipeline",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "content_pipeline"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Content platform credentials",
+            "Publishing preferences"
+          ],
+          "estimatedMinutes": 10,
+          "group": "content"
+        },
+        "mission-control": {
+          "file": "deploy-mission-control.md",
+          "description": "Mission control dashboard for system overview",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "mission_control"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "operations"
+        },
+        "tiktok-account-setup": {
+          "file": "deploy-tiktok-account-setup.md",
+          "description": "TikTok account setup and API configuration",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "tiktok_account"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "TikTok account credentials",
+            "API access tokens"
+          ],
+          "estimatedMinutes": 15,
+          "group": "integrations"
+        },
+        "tiktok-compliance": {
+          "file": "deploy-tiktok-compliance.md",
+          "description": "TikTok content compliance checks and safety gates",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/tiktok-account-setup"
+          ],
+          "provides": [
+            "tiktok_compliance"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 5,
+          "group": "integrations"
+        },
+        "tiktok-posting": {
+          "file": "deploy-tiktok-posting.md",
+          "description": "Automated TikTok content posting",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/tiktok-account-setup",
+            "openclaw/tiktok-compliance"
+          ],
+          "provides": [
+            "tiktok_posting"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Posting schedule",
+            "Content approval preferences"
+          ],
+          "estimatedMinutes": 10,
+          "group": "integrations"
+        },
+        "tiktok-warmup": {
+          "file": "deploy-tiktok-warmup.md",
+          "description": "TikTok account warm-up strategy for new accounts",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/tiktok-account-setup"
+          ],
+          "provides": [
+            "tiktok_warmup"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Warmup duration",
+            "Content strategy"
+          ],
+          "estimatedMinutes": 10,
+          "group": "integrations"
+        },
+        "video-research": {
+          "file": "deploy-video-research.md",
+          "description": "Video topic research and competitive analysis",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/knowledge-base"
+          ],
+          "provides": [
+            "video_research"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "content"
+        },
+        "youtube-posting": {
+          "file": "deploy-youtube-posting.md",
+          "description": "Automated YouTube content posting and scheduling",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/google-workspace"
+          ],
+          "provides": [
+            "youtube_posting"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "YouTube channel credentials",
+            "Upload preferences"
+          ],
+          "estimatedMinutes": 10,
+          "group": "content"
+        },
+        "diagnose-cron": {
+          "file": "diagnose-cron.md",
+          "description": "Diagnose and fix broken scheduled jobs (launchd/crontab/schtasks)",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "cron_diagnostics"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "operations"
+        },
+        "action-items": {
+          "file": "deploy-action-items.md",
+          "description": "Action item extraction and approval engine from meetings/messages",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "action_items"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "automation"
+        },
+        "daily-briefing-v2": {
+          "file": "deploy-daily-briefing-v2.md",
+          "description": "Daily morning briefing v2 with enhanced context and formatting",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "daily_briefing_v2"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "automation"
+        },
+        "git-autosync-v2": {
+          "file": "deploy-git-autosync-v2.md",
+          "description": "Git auto-sync v2 with improved conflict resolution",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "git_autosync_v2"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Git remote URL",
+            "SSH key or HTTPS token"
+          ],
+          "estimatedMinutes": 10,
+          "group": "operations"
+        },
+        "github-cicd": {
+          "file": "deploy-github-cicd.md",
+          "description": "GitHub CI/CD with AI-powered code review",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "github_cicd"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "GitHub personal access token",
+            "Repository selection"
+          ],
+          "estimatedMinutes": 15,
+          "group": "integrations"
+        },
+        "himalaya-email": {
+          "file": "deploy-himalaya-email.md",
+          "description": "Himalaya CLI email client integration",
+          "os": [
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "himalaya_email"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Email account credentials",
+            "IMAP/SMTP settings"
+          ],
+          "estimatedMinutes": 10,
+          "group": "integrations"
+        },
+        "linear-integration": {
+          "file": "deploy-linear-integration.md",
+          "description": "Linear ticket management and project tracking",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "linear_integration"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Linear API key",
+            "Team/project selection"
+          ],
+          "estimatedMinutes": 10,
+          "group": "integrations"
+        },
+        "meeting-prep": {
+          "file": "deploy-meeting-prep.md",
+          "description": "Automated meeting preparation with context gathering",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/google-workspace",
+            "openclaw/personal-crm"
+          ],
+          "provides": [
+            "meeting_prep"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "automation"
+        },
+        "notion-workspace": {
+          "file": "deploy-notion-workspace.md",
+          "description": "Notion workspace integration and sync",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "notion_workspace"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Notion API key",
+            "Workspace selection"
+          ],
+          "estimatedMinutes": 10,
+          "group": "integrations"
+        },
+        "personal-crm-v2": {
+          "file": "deploy-personal-crm-v2.md",
+          "description": "Personal CRM v2 with enhanced relationship intelligence",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/google-workspace",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "personal_crm_v2"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 15,
+          "group": "core"
+        },
+        "security-council-v2": {
+          "file": "deploy-security-council-v2.md",
+          "description": "Security council v2 with enhanced threat analysis",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging",
+            "openclaw/security-safety"
+          ],
+          "provides": [
+            "security_council_v2"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "intelligence"
+        },
+        "transcript-pipeline": {
+          "file": "deploy-transcript-pipeline.md",
+          "description": "Transcript ingestion and processing pipeline",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "transcript_pipeline"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Transcript source configuration"
+          ],
+          "estimatedMinutes": 10,
+          "group": "automation"
+        },
+        "urgent-email-v2": {
+          "file": "deploy-urgent-email-v2.md",
+          "description": "Urgent email detection v2 with improved classification",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging",
+            "openclaw/google-workspace"
+          ],
+          "provides": [
+            "urgent_email_v2"
+          ],
+          "requiresHumanInput": false,
+          "estimatedMinutes": 10,
+          "group": "automation"
+        },
+        "oauth-reauth": {
+          "file": "oauth-reauth.md",
+          "description": "Guided OAuth token refresh for any provider via Telegram",
+          "os": [
+            "windows",
+            "macos",
+            "linux"
+          ],
+          "depends": [
+            "openclaw/install",
+            "openclaw/messaging"
+          ],
+          "provides": [
+            "oauth_reauth"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "OAuth provider selection",
+            "Client browser interaction"
+          ],
+          "estimatedMinutes": 10,
+          "group": "operations"
+        }
+      },
+      "groups": {
+        "install": {
+          "name": "Install",
+          "description": "OpenClaw agent installation and enrollment.",
+          "order": 0
+        },
+        "foundation": {
+          "name": "Foundation",
+          "description": "Core identity, messaging, security, and integrations. Deploy first.",
+          "order": 1
+        },
+        "core": {
+          "name": "Core Data Systems",
+          "description": "CRM, knowledge base, social tracking.",
+          "order": 2
+        },
+        "intelligence": {
+          "name": "Intelligence Systems",
+          "description": "Advisory council, security council, platform health.",
+          "order": 3
+        },
+        "automation": {
+          "name": "Automation & Communication",
+          "description": "Pipelines, email detection, briefings.",
+          "order": 4
+        },
+        "operations": {
+          "name": "Operations & Maintenance",
+          "description": "Backups, syncing, monitoring, cost tracking.",
+          "order": 5
+        },
+        "content": {
+          "name": "Content & Creative",
+          "description": "Humanizer, image gen, video gen, video analysis.",
+          "order": 6
+        },
+        "integrations": {
+          "name": "Integrations & Specialized",
+          "description": "Newsletter, Asana, earnings, food journal.",
+          "order": 7
+        }
+      }
+    },
+    "cora": {
+      "description": "Cora AI business-internal skills (getcora.io)",
+      "skills": {
+        "deploy-site-analyzer": {
+          "file": "cora/deploy-site-analyzer.md",
+          "description": "Deploy ISA crawl worker on a Mac \u2014 Cora internal only",
+          "os": [
+            "macos"
+          ],
+          "depends": [
+            "openclaw/install"
+          ],
+          "provides": [
+            "cora_site_analyzer"
+          ],
+          "requiresHumanInput": true,
+          "humanInputNeeded": [
+            "Cora authorization confirmation (CORA-AUTHORIZED)",
+            "Firecrawl API key",
+            "Pre-install confirmation"
+          ],
+          "estimatedMinutes": 15,
+          "group": "cora-internal"
+        }
+      }
+    }
+  }
+}

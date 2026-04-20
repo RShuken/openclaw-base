@@ -1,0 +1,46 @@
+{
+  "$schema": "https://openclaw.ai/schema/openclaw.json",
+  "_comment": "Default model stack for openclaw-base. Verified against primary sources 2026-04-19: developers.openai.com/codex/models + /api/docs/models/all. Removed ONLY verified-fictional IDs (gpt-5.4-codex — not on either OpenAI page). Kept all documented variants including gpt-5.3-codex-spark (research preview per /codex/models). KNOWN ISSUE: GitHub openclaw/openclaw#37623 and #55461 report openai-codex/gpt-5.4 has runtime resolution issues in some OpenClaw versions — may need models.providers override on the target host. Claude is NOT in default stack.",
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openai-codex/gpt-5.4",
+        "fallbacks": [
+          "openai-codex/gpt-5.4-mini",
+          "openai-codex/gpt-5.4-nano",
+          "openai-codex/gpt-5.3-codex",
+          "openai-codex/gpt-5.3-codex-spark",
+          "openai-codex/gpt-5.2-codex",
+          "openai-codex/gpt-5.2",
+          "openai-codex/gpt-5.1-codex",
+          "openai-codex/gpt-5.1-codex-max",
+          "openai-codex/gpt-5.1-codex-mini",
+          "openai-codex/gpt-5.1",
+          "openai-codex/gpt-5-codex",
+          "openai/gpt-5.4",
+          "openai/gpt-5.4-mini",
+          "openai/o4-mini",
+          "openai/o3"
+        ]
+      },
+      "models": {
+        "openai-codex/gpt-5.4": {},
+        "openai-codex/gpt-5.4-mini": {},
+        "openai-codex/gpt-5.4-nano": {},
+        "openai-codex/gpt-5.3-codex": {},
+        "openai-codex/gpt-5.3-codex-spark": {},
+        "openai-codex/gpt-5.2-codex": {},
+        "openai-codex/gpt-5.2": {},
+        "openai-codex/gpt-5.1-codex": {},
+        "openai-codex/gpt-5.1-codex-max": {},
+        "openai-codex/gpt-5.1-codex-mini": {},
+        "openai-codex/gpt-5.1": {},
+        "openai-codex/gpt-5-codex": {},
+        "openai/gpt-5.4": {},
+        "openai/gpt-5.4-mini": {},
+        "openai/o4-mini": {},
+        "openai/o3": {}
+      }
+    }
+  }
+}
