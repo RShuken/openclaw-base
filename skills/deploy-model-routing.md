@@ -213,6 +213,47 @@ Models / modes that look current on older blog posts but aren't the 2026 pick:
 - **o1 / o1-mini** — DeepSeek R1 / R2 are ~96% cheaper on output with comparable reasoning. Only pick o1 for OpenAI-ecosystem lock-in.
 - **Raw `openrouter/auto` without cost guardrail** — great for variable workloads, but for high-volume single-task pipelines, pinning to `model:floor` gives predictable cost. Community warning.
 
+## Routing gotchas validated 2026-04-21
+
+Learned the hard way on a Mac Mini 4C / Apple Silicon install. Any skill author or operator should read this before wiring up heartbeat / background routing.
+
+### `gemma3:4b` fails tool-carrying inference calls
+
+OpenClaw attaches a tool schema to every inference call including heartbeat. Gemma 3 at 4B parameters does not have native tool-call support; Ollama rejects the call with HTTP 400 "provider rejected the request schema or tool payload." OpenClaw's fallback ladder then escalates to the next candidate — typically the cloud primary — defeating the local-routing intent.
+
+**Fix:** use `gemma4:e4b` (native tool-calling at this tier), `qwen2.5:7b`, or `llama3.2:3b`. See [`memory-options/gemma4-heartbeat.md`](./memory-options/gemma4-heartbeat.md) for validated recipe.
+
+### `openclaw capability model run --model X` is NOT a reliable routing probe
+
+The `--model` flag on `capability model run` does not reliably bind — responses frequently show `provider: openai-codex` regardless of the override. Do not use this CLI to verify routing. Instead:
+
+- Watch the backend's own log (e.g. Ollama at `/opt/homebrew/var/log/ollama.log`) for time-aligned inference activity
+- Grep `/tmp/openclaw/openclaw-YYYY-MM-DD.log` for `"subsystem":"model-fallback/decision"` entries — those carry `requestedProvider`, `requestedModel`, `reason`, and `nextCandidate*` fields that show what actually happened
+
+### Ollama needs an auth profile entry even though it's local
+
+Without `ollama:default` in `auth-profiles.json`, OpenClaw returns `401 "No API key found for provider ollama"` on every heartbeat. Add:
+
+```json
+"ollama:default": { "type": "token", "provider": "ollama", "token": "local" }
+```
+
+The literal `"local"` is fine — Ollama doesn't validate it.
+
+### Gemini embedder auth has a provider-id mismatch
+
+The embedding layer uses provider id `gemini` but the runtime auth lookup asks for `google`. Store the same API key under BOTH `gemini:default` AND `google:default` profile entries. See [`memory-options/gemini-embeddings.md`](./memory-options/gemini-embeddings.md).
+
+### MCP-registered tools don't surface to `openclaw agent` turns
+
+If you're designing a skill that uses a backend via an MCP server (e.g., Graphiti, mem0 HTTP): OpenClaw's MCP-to-agent-turn integration has a surfacing gap in 2026.4.15. Agents hallucinate the tool call (emit plausible "Added" text without actually invoking; zero MCP traces in gateway log). Six registration paths tested; none work for `openclaw agent` at this version.
+
+**Working alternative:** wrap the backend in a local Flask REST service and have the agent reach it via `curl` from the exec shell tool — which OpenClaw surfaces correctly. This is the pattern used in production by the Edge deployment and by Flyn. See [`deploy-structured-memory-rest.md`](./deploy-structured-memory-rest.md) for the detailed pattern and [`memory-options/graphiti-neo4j.md`](./memory-options/graphiti-neo4j.md) for the specific Graphiti implementation.
+
+### Codex tool_use emission regression on some OpenAI Codex versions
+
+GitHub issue `openclaw/openclaw#53959` documents a regression where `openai-codex/gpt-5.3-codex` stopped emitting `tool_use` for any tool (exec, MCP, web) after OpenClaw version 2026.3.23-2. If exec tool calls stop working on a known-good config, check this first. Workarounds per that issue: pin Codex to `gpt-5.4`, swap to Anthropic Claude primary, or wait for upstream patch.
+
 ## How skills use this guide
 
 ### In the skill's compat block

@@ -21,6 +21,21 @@ docs_urls:
 
 Two shipped models as of 2026-04-20 — **verified via direct fetch on [ai.google.dev/gemini-api/docs/embeddings](https://ai.google.dev/gemini-api/docs/embeddings)**.
 
+## ⚠️ Auth profile quirk — REQUIRES both `gemini:default` AND `google:default`
+
+Validated 2026-04-21: OpenClaw's embedding provider advertises provider id `gemini` in `openclaw capability embedding providers` output, but the runtime auth lookup asks for the key under provider id `google`. Store the SAME API key under BOTH profile keys in `~/.openclaw/agents/<id>/agent/auth-profiles.json`:
+
+```json
+{
+  "profiles": {
+    "gemini:default": { "type": "token", "provider": "gemini", "token": "AIza..." },
+    "google:default": { "type": "token", "provider": "google", "token": "AIza..." }
+  }
+}
+```
+
+Symptom if you only set `gemini:default`: `openclaw capability embedding providers` reports `configured: true` but any actual embedding call fails with `Error: No API key found for provider "google"`. Belt-and-suspenders — set both.
+
 ## `gemini-embedding-2-preview` — current flagship, #1 MTEB
 
 - **Status:** Public preview since 2026-03-10. Production-integration allowed but subject to iterative refinement before GA

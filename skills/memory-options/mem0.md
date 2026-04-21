@@ -1,12 +1,12 @@
 ---
-name: "mem0"
+name: "mem0 (not recommended — see caveats below)"
 category: "structured-memory"
 repo: "https://github.com/mem0ai/mem0"
 license: "Apache-2.0"
-version_last_verified: "v1.0.x (stable); v2.0.0b0 Python SDK preview"
-last_checked: "2026-04-20"
-maintenance_status: "active"
-openclaw_integration: "HTTP-bridge via official mem0 OpenClaw plugin"
+version_last_verified: "v1.0.x (stable); v2.0.0 breaking release April 2026"
+last_checked: "2026-04-21"
+maintenance_status: "active but flagged — see caveats"
+openclaw_integration: "HTTP-bridge via official mem0 OpenClaw plugin (untested by us post-v2.0 breaking change)"
 cost_tier: "extra-llm-calls"
 privacy_tier: "hybrid"
 requires:
@@ -19,7 +19,21 @@ docs_urls:
   - "https://arxiv.org/abs/2504.19413"
 ---
 
-# mem0
+# mem0 — NOT RECOMMENDED as of 2026-04-21
+
+> **Use [`graphiti-neo4j.md`](./graphiti-neo4j.md) instead for structured temporal memory.** mem0 has three material issues that came to light in April 2026 research (see caveats at the top of this file). This entry is kept for completeness and to inform migrations off mem0, not as a recommendation.
+
+## Why not mem0 (be honest)
+
+1. **v2.0.0 (April 16, 2026) went ADD-only.** No UPDATE or DELETE operations on extracted facts. Superseded facts accumulate indefinitely. For evolving client configs ("client X switched from weekly to biweekly syncs"), this is a staleness bomb.
+2. **Open CVE GHSA-5gv3-2fv6-jvhx (Apr 17, 2026, CVSS 8.1)** — SQL/Cypher injection in PGVector/Neptune/Azure MySQL backends. Lower risk on default SQLite backend but signals project security hygiene.
+3. **Weak at temporal reasoning.** mem0's own arxiv paper admits this. On LongMemEval temporal subtask: mem0 49.0% vs Zep/Graphiti 63.8%. "What did I configure for client X last month" is exactly the query mem0 loses.
+
+If you're already committed to mem0 or have a specific use case (simple user-preference injection, not temporal reasoning), the install notes below remain accurate. Otherwise route to `graphiti-neo4j.md`.
+
+---
+
+## Legacy content (for reference / existing mem0 deployments)
 
 - **Stats:** 53.6k stars. Apache 2.0.
 - **Official OpenClaw integration:** [docs.mem0.ai/integrations/openclaw](https://docs.mem0.ai/integrations/openclaw) + [mem0ai/mem0/openclaw](https://github.com/mem0ai/mem0/tree/main/openclaw)

@@ -4,8 +4,24 @@
 
 - **OpenClaw Version**: 2026.4.15+
 - **Builds on**: [`deploy-memory.md`](./deploy-memory.md) (the built-in subsystem must be deployed first — this skill extends or replaces it)
-- **Status**: WORKING
-- **Structure**: this file is a lean routing document. Per-option details live in [`memory-options/`](./memory-options/) — one file per option, each with YAML frontmatter for mechanical audit.
+- **Status**: WORKING — validated end-to-end 2026-04-21 on Apple Silicon, 16 GB RAM
+- **Structure**: this file is a lean routing document. Per-option details live in [`memory-options/`](./memory-options/). Integration pattern for structured memory lives in [`deploy-structured-memory-rest.md`](./deploy-structured-memory-rest.md).
+
+## Recommended stack (as of 2026-04-21)
+
+For a solo operator agent on Apple Silicon, the **validated working stack** is:
+
+| Layer | Component | Where detailed |
+|-------|-----------|----------------|
+| Context engine (conversation fidelity) | **Lossless Claw plugin** | [`memory-options/lossless-claw.md`](./memory-options/lossless-claw.md) |
+| Semantic recall over markdown | Built-in `sqlite-vec` + Gemini embeddings | [`deploy-memory.md`](./deploy-memory.md) + [`memory-options/gemini-embeddings.md`](./memory-options/gemini-embeddings.md) |
+| Local embedding fallback | Built-in `embeddinggemma` GGUF | [`memory-options/embeddinggemma.md`](./memory-options/embeddinggemma.md) |
+| Background chat / heartbeat model | **Gemma 4 `gemma4:e4b`** via Ollama | [`memory-options/gemma4-heartbeat.md`](./memory-options/gemma4-heartbeat.md) |
+| Structured temporal KG | **Graphiti + Neo4j via Flask REST** | [`memory-options/graphiti-neo4j.md`](./memory-options/graphiti-neo4j.md) + [`deploy-structured-memory-rest.md`](./deploy-structured-memory-rest.md) |
+| Agent access pattern | `curl` from exec shell tool (NOT MCP) | [`deploy-structured-memory-rest.md`](./deploy-structured-memory-rest.md) |
+| Tiering | Hot / Warm / Cold markdown lifecycle | [`memory-options/community-patterns.md`](./memory-options/community-patterns.md) |
+
+**NOT recommended for new deploys (despite still being in the options matrix):** `mem0` — see [`memory-options/mem0.md`](./memory-options/mem0.md) for the three April-2026 reasons (v2.0 breaking, open CVE, weak temporal).
 
 ## Purpose
 
@@ -38,17 +54,17 @@ Document the memory architecture options beyond OpenClaw's built-in subsystem. W
 |--------|------|----------|------|---------|---------------------|
 | Built-in (default) | [`deploy-memory.md`](./deploy-memory.md) | baseline | $ cloud | cloud | — |
 | Lossless Claw | [`memory-options/lossless-claw.md`](./memory-options/lossless-claw.md) | context-engine | extra LLM calls | local storage | **Adds** — contextEngine slot |
-| mem0 | [`memory-options/mem0.md`](./memory-options/mem0.md) | structured-memory | extra LLM + vector DB | hybrid | Replaces / adds |
+| ~~mem0~~ | [`memory-options/mem0.md`](./memory-options/mem0.md) | structured-memory | extra LLM + vector DB | hybrid | ⚠️ **NOT recommended** for new deploys (see file for v2.0 breaking + CVE + temporal weakness) |
 | Ollama embeddings | [`memory-options/ollama-embeddings.md`](./memory-options/ollama-embeddings.md) | embedding-local | $0 | local | Swaps provider |
 | oMLX (Apple Silicon) | [`memory-options/omlx-apple-silicon.md`](./memory-options/omlx-apple-silicon.md) | embedding-local + chat | $0 | local | Swaps provider (AS only) |
 | EmbeddingGemma | [`memory-options/embeddinggemma.md`](./memory-options/embeddinggemma.md) | embedding-local | $0 | local | Swaps provider |
 | Gemini cloud (v1 + v2 preview) | [`memory-options/gemini-embeddings.md`](./memory-options/gemini-embeddings.md) | embedding-cloud | per-token | cloud | Swaps provider |
 | OpenAI cloud | [`memory-options/openai-embeddings.md`](./memory-options/openai-embeddings.md) | embedding-cloud | per-token | cloud | Swaps provider |
-| Graphiti + Neo4j | [`memory-options/graphiti-neo4j.md`](./memory-options/graphiti-neo4j.md) | structured-memory | Docker + Python + Node | local | Adds structured memory |
-| Zep (hosted) | [`memory-options/zep-hosted.md`](./memory-options/zep-hosted.md) | structured-memory | $ service | cloud | Adds via HTTP bridge |
-| Letta (MemGPT) | [`memory-options/letta-memgpt.md`](./memory-options/letta-memgpt.md) | structured-memory | LLM + vector | local | Replaces agent harness |
+| **Graphiti + Neo4j (REST)** | [`memory-options/graphiti-neo4j.md`](./memory-options/graphiti-neo4j.md) + [`deploy-structured-memory-rest.md`](./deploy-structured-memory-rest.md) | structured-memory | Docker + Python | local | Adds structured memory (**recommended**) |
+| Zep (hosted) | [`memory-options/zep-hosted.md`](./memory-options/zep-hosted.md) | structured-memory | $ service | cloud | Managed-service alt to self-hosted Graphiti |
+| Letta (MemGPT) | [`memory-options/letta-memgpt.md`](./memory-options/letta-memgpt.md) | structured-memory | LLM + vector | local | Replaces agent harness (wrong shape for augmenting existing OpenClaw agent) |
 | LanceDB / Chroma / Qdrant / Weaviate | [`memory-options/vector-dbs-alternatives.md`](./memory-options/vector-dbs-alternatives.md) | vector-db | self-hosted | local | Replaces sqlite-vec |
-| Gemma 4 (local chat/heartbeat) | [`memory-options/gemma4-heartbeat.md`](./memory-options/gemma4-heartbeat.md) | chat-heartbeat | $0 | local | Adds local inference |
+| **Gemma 4 (`gemma4:e4b` heartbeat)** | [`memory-options/gemma4-heartbeat.md`](./memory-options/gemma4-heartbeat.md) | chat-heartbeat | $0 | local | Adds local inference (**recommended**; gemma3:4b fails tool calls) |
 | Community patterns | [`memory-options/community-patterns.md`](./memory-options/community-patterns.md) | pattern | — | — | Additive |
 | Enterprise Reference Stack template | [`memory-options/enterprise-v2-stack-template.md`](./memory-options/enterprise-v2-stack-template.md) | template | see constituents | local | Pre-composed stack |
 

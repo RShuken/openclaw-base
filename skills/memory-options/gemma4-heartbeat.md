@@ -31,13 +31,26 @@ docs_urls:
 
 ## Variants
 
-| Model tag | Size | When |
-|-----------|------|------|
-| `gemma4:e4b` | 4B-effective params | Tight memory (laptops, <8GB free) |
-| `gemma4` (default) | Larger (verify exact on Ollama) | Standard heartbeat on 16GB+ |
-| `gemma4:27b` (verify availability) | 27B | High-quality heartbeat on GPU/unified-memory |
+| Model tag | Size on disk | Active memory | When |
+|-----------|--------------|---------------|------|
+| **`gemma4:e4b`** | 9.6 GB | ~11 GB Metal (auto-unload after ~4 min idle) | ✅ **recommended default** — validated 2026-04-21 on 16 GB Mac Mini |
+| `gemma4:e2b` | 7.2 GB | ~8 GB | Tight-memory fallback if e4b pressures the host |
+| `gemma4:26b` | 18 GB | doesn't fit 16 GB | 32+ GB hosts only |
+| `gemma4:31b` | 20 GB | doesn't fit 16 GB | 32+ GB hosts only |
 
-Full size table: verify on [ollama.com/library/gemma4](https://ollama.com/library/gemma4).
+Full size table: [ollama.com/library/gemma4](https://ollama.com/library/gemma4).
+
+**⚠️ Use `gemma4:e4b`, NOT `gemma3:4b`.** Gemma 3 at 4B parameters lacks native tool-calling — it returns HTTP 400 "provider rejected the request schema or tool payload" to any OpenClaw inference call carrying a tool schema (which is all of them). The agent's model-fallback ladder then falls through to the cloud primary, defeating the local-cost intent. Gemma 4 adds native tool-calling at the e4b tier and up. Confirmed 2026-04-21 via `/api/show` capability advertising `['completion', 'vision', 'audio', 'tools', 'thinking']`.
+
+## Required auth profile (even though it's local)
+
+Ollama is localhost — but OpenClaw still requires an auth profile entry, else you get `401 "No API key found for provider ollama"` when the heartbeat fires. Add to `~/.openclaw/agents/<id>/agent/auth-profiles.json`:
+
+```json
+"ollama:default": { "type": "token", "provider": "ollama", "token": "local" }
+```
+
+The literal string `"local"` is fine — Ollama doesn't validate it.
 
 ## Install
 
